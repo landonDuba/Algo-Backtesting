@@ -1,0 +1,25 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © SPYCalls
+
+//@version=5
+strategy("Simple Moving Average Crossover Strategy", overlay = true)
+
+ema20 = ta.ema(close, 20)
+ema50 = ta.ema(close, 50)
+
+long = ema20 > ema50
+short = ema20 < ema50
+
+plot(ema20, title="20", color=#00ffaa, linewidth=3)
+plot(ema50, title="50", color=#FFC1CC, linewidth=3)
+
+start = timestamp(2022, 1, 1, 0, 0)
+end = timestamp(2024, 1, 1, 0, 0)
+
+if time >= start and time <= end
+    strategy.entry("Long", strategy.long, 1000.0, when = long)
+    strategy.entry("Short", strategy.short, 1000.0, when = short)
+
+    strategy.close("Long", when = short)
+    strategy.close("Short", when = long)
+
